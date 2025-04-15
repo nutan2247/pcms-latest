@@ -234,29 +234,29 @@ class Applicant extends MX_Controller {
 		$this->applicant->updateprofdoc($docdata,$getuserid->doc_refrence_id);
 		$serachlink = '<a href="'.base_url('license/search').'" style="color:blue;">Click here</a>';
 		$bodycontentforCode = '<p style="font-size: 12px; margin-bottom:10px; color:rgba(0,0,0,.8);line-height: 18px;">Greetings!<br><br>Your application for FOREIGN PROFESSIONAL was successfully submitted. Please provide us some time to review your documents.<br><br>Please '.$serachlink.' to check the status of your application <br>And enter this Refrence Code : <strong>'.$proRefCode.'</strong><br><br>Should you have questions just message us and we would be happy to assist you.</p>';
-		$config = Array(
-			'protocol' => 'smtp',
-			'smtp_host' => SMTP_HOSTNAME,
-			'smtp_port' => SMTP_PORT,
-			'smtp_user' => SENT_EMAIL_FROM,
-			'smtp_pass' => SENT_EMAIL_PASSWORD,
-			'mailtype'  => 'html', 
-			'newline'   => "\r\n",
-			'AuthType'   => "XOAUTH2",
-			'charset'   => 'iso-8859-1',
+		// $config = Array(
+		// 	'protocol' => 'smtp',
+		// 	'smtp_host' => SMTP_HOSTNAME,
+		// 	'smtp_port' => SMTP_PORT,
+		// 	'smtp_user' => SENT_EMAIL_FROM,
+		// 	'smtp_pass' => SENT_EMAIL_PASSWORD,
+		// 	'mailtype'  => 'html', 
+		// 	'newline'   => "\r\n",
+		// 	'AuthType'   => "XOAUTH2",
+		// 	'charset'   => 'iso-8859-1',
 			
-		);  
-		$this->load->library('email');
+		// );  
+		// $this->load->library('email');
 
 		if($updaterefencecode){
 			$settingarr = $this->common_model->get_setting('1');
 			//send refrence code 
 			$userdetails = $this->applicant->fetch_user_details($getuserid->user_id);
-			$this->email->initialize($config);
-			$this->email->set_newline("\r\n");
-			$this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
-			$this->email->to($userdetails->email);
-			$this->email->subject('Application submitted successfully');
+			// $this->email->initialize($config);
+			// $this->email->set_newline("\r\n");
+			// $this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
+			// $this->email->to($userdetails->email);
+			// $this->email->subject('Application submitted successfully');
 			$emailbody = array();
 			$emailbody['name'] 			= $userdetails->fullname;
 			$emailbody['thanksname'] 	= $settingarr->signature_name;
@@ -265,15 +265,18 @@ class Applicant extends MX_Controller {
 			$emailbody['body_msg'] 		= $bodycontentforCode;
 			$emailmessage = $this->load->view('emailer', $emailbody,  TRUE);
 			//$this->email->message('Testing the email class.');
-			$this->email->message($emailmessage);
-			$this->email->send();
+			// $this->email->message($emailmessage);
+			// $this->email->send()
+			
+			$this->load->helper('mail');
+			$email_status = send_mail($userdetails->email, 'Application submitted successfully',$emailmessage, $settingarr);
 
 			//2nd email
-			$this->email->initialize($config);
-			$this->email->set_newline("\r\n");
-			$this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
-			$this->email->to($userdetails->email);
-			$this->email->subject('Payment_Receipt');
+			// $this->email->initialize($config);
+			// $this->email->set_newline("\r\n");
+			// $this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
+			// $this->email->to($userdetails->email);
+			// $this->email->subject('Payment_Receipt');
 			$emailbodyr = array();
 			$emailbodyr['name'] 		= $userdetails->fullname;
 			$emailbodyr['thanksname'] 	= $settingarr->signature_name;
@@ -282,8 +285,11 @@ class Applicant extends MX_Controller {
 			$emailbodyr['body_msg'] 	= $bodycontentforCodeemail;
 			$emailmessage = $this->load->view('emailer_receipt', $emailbodyr,  TRUE);
 			//$this->email->message('Testing the email class.');
-			$this->email->message($emailmessage);
-			$this->email->send();
+			// $this->email->message($emailmessage);
+			// $this->email->send();
+
+			$this->load->helper('mail');
+			$email_status = send_mail($userdetails->email, 'Payment_Receipt',$emailmessage, $settingarr);
 
 			//end send refrence code
 			$updatenotification 				= array();
@@ -385,27 +391,27 @@ class Applicant extends MX_Controller {
 		$bodycontentforCode = '<p style="font-size: 12px; margin-bottom:10px; color:rgba(0,0,0,.8);line-height: 18px;">Greetings!<br><br>Your Certificate for Professional accreditation is here.<br><br>
 			'.$content.'
 			<br><br>Should you have questions just message us and we would be happy to assist you.<br></p>';
-		$config = Array(
-			'protocol' => 'smtp',
-			'smtp_host' => SMTP_HOSTNAME,
-			'smtp_port' => SMTP_PORT,
-			'smtp_user' => SENT_EMAIL_FROM,
-			'smtp_pass' => SENT_EMAIL_PASSWORD,
-			'mailtype'  => 'html', 
-			'newline'   => "\r\n",
-			'AuthType'   => "XOAUTH2",
-			'charset'   => 'iso-8859-1',
+		// $config = Array(
+		// 	'protocol' => 'smtp',
+		// 	'smtp_host' => SMTP_HOSTNAME,
+		// 	'smtp_port' => SMTP_PORT,
+		// 	'smtp_user' => SENT_EMAIL_FROM,
+		// 	'smtp_pass' => SENT_EMAIL_PASSWORD,
+		// 	'mailtype'  => 'html', 
+		// 	'newline'   => "\r\n",
+		// 	'AuthType'   => "XOAUTH2",
+		// 	'charset'   => 'iso-8859-1',
 			
-		);  
-		$this->load->library('email');
+		// );  
+		// $this->load->library('email');
 		if($email != ''){
 			//send certificate 
 			$settingarr = $this->common_model->get_setting('1');
-			$this->email->initialize($config);
-			$this->email->set_newline("\r\n");
-			$this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
-			$this->email->to($email);
-			$this->email->subject($subject);
+			// $this->email->initialize($config);
+			// $this->email->set_newline("\r\n");
+			// $this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
+			// $this->email->to($email);
+			// $this->email->subject($subject);
 			$emailbody = array();
 			$emailbody['name'] 			= $name;
 			$emailbody['thanksname'] 	= $settingarr->signature_name;
@@ -413,8 +419,11 @@ class Applicant extends MX_Controller {
 			$emailbody['thanks3'] 		= $settingarr->position;
 			$emailbody['body_msg'] 	= $bodycontentforCode;
 			$emailmessage = $this->load->view('emailer', $emailbody,  TRUE);
-			$this->email->message($emailmessage);
-			$this->email->send();
+			// $this->email->message($emailmessage);
+			// $this->email->send();
+
+	$this->load->helper('mail');
+	$email_status = send_mail($email, $subject,$emailmessage, $settingarr);
 			//end send certificate 
 			echo 'Mail sent successfully';
 		}else{
@@ -777,27 +786,27 @@ class Applicant extends MX_Controller {
 				Please <a href="'.base_url('login').'" style="color:blue;" target="_blank">click this link </a> to log in.
 				<br> Should you have questions just message us and we would be happy to assist you.</p>';
 			
-			$config = Array(
-				'protocol' => 'smtp',
-				'smtp_host' => SMTP_HOSTNAME,
-				'smtp_port' => SMTP_PORT,
-				'smtp_user' => SENT_EMAIL_FROM,
-				'smtp_pass' => SENT_EMAIL_PASSWORD,
-				'mailtype'  => 'html', 
-				'newline'   => "\r\n",
-				'AuthType'   => "XOAUTH2",
-				'charset'   => 'iso-8859-1',
+			// $config = Array(
+			// 	'protocol' => 'smtp',
+			// 	'smtp_host' => SMTP_HOSTNAME,
+			// 	'smtp_port' => SMTP_PORT,
+			// 	'smtp_user' => SENT_EMAIL_FROM,
+			// 	'smtp_pass' => SENT_EMAIL_PASSWORD,
+			// 	'mailtype'  => 'html', 
+			// 	'newline'   => "\r\n",
+			// 	'AuthType'   => "XOAUTH2",
+			// 	'charset'   => 'iso-8859-1',
 				
-			);  
-			$this->load->library('email');
+			// );  
+			// $this->load->library('email');
 			if(isset($res) && $res){
 				//send refrence code 
 				$settingarr = $this->common_model->get_setting('1');
-				$this->email->initialize($config);
-				$this->email->set_newline("\r\n");
-				$this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
-				$this->email->to($userdetails->email);
-				$this->email->subject('Professional Registration Success');
+				// $this->email->initialize($config);
+				// $this->email->set_newline("\r\n");
+				// $this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
+				// $this->email->to($userdetails->email);
+				// $this->email->subject('Professional Registration Success');
 				$emailbody = array();
 				$emailbody['name'] 			= $userdetails->fullname;
 				$emailbody['thanksname'] 	= $settingarr->signature_name;
@@ -813,15 +822,18 @@ class Applicant extends MX_Controller {
 				if(isset($userdetails->registration_no) && file_exists('assets/uploads/pdf/'.$docDetails->refrence_code.'cert.pdf')){
 					$this->email->attach(base_url('assets/uploads/pdf/'.$docDetails->refrence_code.'cert.pdf'));
 					}	
-				$this->email->send();
+				// $this->email->send();
+
+				$this->load->helper('mail');
+				$email_status = send_mail($userdetails->email, 'Professional Registration Success',$emailmessage, $settingarr);
 				//end send refrence code 
 
 				//2nd email
-				$this->email->initialize($config);
-				$this->email->set_newline("\r\n");
-				$this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
-				$this->email->to($userdetails->email);
-				$this->email->subject('Payment Receipt');
+				// $this->email->initialize($config);
+				// $this->email->set_newline("\r\n");
+				// $this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
+				// $this->email->to($userdetails->email);
+				// $this->email->subject('Payment Receipt');
 				$emailbody = array();
 				$emailbody['name'] 			= $userdetails->fullname;
 				$emailbody['thanksname'] 	= $settingarr->signature_name;
@@ -830,8 +842,11 @@ class Applicant extends MX_Controller {
 				$emailbody['body_msg'] 	= $bodycontentforCodeemail;
 				$emailmessage = $this->load->view('emailer_receipt', $emailbody,  TRUE);
 				//$this->email->message('Testing the email class.');
-				$this->email->message($emailmessage);
-				$this->email->send();
+				// $this->email->message($emailmessage);
+				// $this->email->send();
+
+				$this->load->helper('mail');
+				$email_status = send_mail($userdetails->email, 'Payment Receipt',$emailmessage, $settingarr);
 
 				$updatenotification 				= array();
 				$updatenotification['user_id'] 		= $userdetails->user_ID;
@@ -979,7 +994,11 @@ class Applicant extends MX_Controller {
 	}
 
 	private function _verifiy_password_hash($password, $hash){
-		return password_verify($password, $hash);
+		if ($hash && isset($hash) && is_string($hash)) {
+			return password_verify($password, $hash);
+			}else{
+				return false;
+			}
 	}
 
 	function logout(){
@@ -1047,8 +1066,11 @@ class Applicant extends MX_Controller {
 			$this->form_validation->set_rules('conf_pass', 'Confirm Password', 'required');
 			if ($this->form_validation->run() == TRUE) {
 				$fetchPassword = $this->applicant->fetchPassword($this->session->userdata('id')); 
-			
-				$verify = password_verify($this->input->post('old_password'),$fetchPassword->password);
+				if ($fetchPassword && isset($fetchPassword) && is_string($fetchPassword)) {
+					$verify = password_verify($this->input->post('old_password'),$fetchPassword->password);
+				}else{
+					$verify = false;
+				}
 				if($verify!=true){
 					$this->session->set_flashdata('item', '<div class="alert alert-danger">Old password not matched.</div>');
 				}
@@ -1425,27 +1447,27 @@ class Applicant extends MX_Controller {
 		$bodycontentforCode = '<p style="font-size: 12px; margin-bottom:10px; color:rgba(0,0,0,.8);line-height: 18px;">Greetings!<br><br>Your Certificate for Professional accreditation is here.<br><br>
 			'.$content.'
 			<br><br>Should you have questions just message us and we would Be happy to assist you.<br></p>';
-		$config = Array(
-			'protocol' => 'smtp',
-			'smtp_host' => SMTP_HOSTNAME,
-			'smtp_port' => SMTP_PORT,
-			'smtp_user' => SENT_EMAIL_FROM,
-			'smtp_pass' => SENT_EMAIL_PASSWORD,
-			'mailtype'  => 'html', 
-			'newline'   => "\r\n",
-			'AuthType'   => "XOAUTH2",
-			'charset'   => 'iso-8859-1',
+		// $config = Array(
+		// 	'protocol' => 'smtp',
+		// 	'smtp_host' => SMTP_HOSTNAME,
+		// 	'smtp_port' => SMTP_PORT,
+		// 	'smtp_user' => SENT_EMAIL_FROM,
+		// 	'smtp_pass' => SENT_EMAIL_PASSWORD,
+		// 	'mailtype'  => 'html', 
+		// 	'newline'   => "\r\n",
+		// 	'AuthType'   => "XOAUTH2",
+		// 	'charset'   => 'iso-8859-1',
 			
-		);  
+		// );  
 		$this->load->library('email');
 		if($email != ''){
 			//send certificate 
 			$settingarr = $this->common_model->get_setting('1');
-			$this->email->initialize($config);
-			$this->email->set_newline("\r\n");
-			$this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
-			$this->email->to($email);
-			$this->email->subject($subject);
+			// $this->email->initialize($config);
+			// $this->email->set_newline("\r\n");
+			// $this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
+			// $this->email->to($email);
+			// $this->email->subject($subject);
 			$emailbody 					= array();
 			$emailbody['name'] 			= $name;
 			$emailbody['thanksname'] 	= $settingarr->signature_name;
@@ -1453,8 +1475,12 @@ class Applicant extends MX_Controller {
 			$emailbody['thanks3'] 		= $settingarr->position;
 			$emailbody['body_msg'] 		= $bodycontentforCode;
 			$emailmessage = $this->load->view('emailer', $emailbody,  TRUE);
-			$this->email->message($emailmessage);
-			$this->email->send();
+
+			// $this->email->message($emailmessage);
+			// $this->email->send();
+
+			$this->load->helper('mail');
+			$email_status = send_mail($email, $subject,$emailmessage, $settingarr);
 			//end send certificate 
 			echo 'Mail sent successfully';
 		}else{
@@ -1486,27 +1512,27 @@ class Applicant extends MX_Controller {
 	public function messagereply(){
 		//echo $this->session->userdata('name'); exit;
 		$bodycontentforCode = '<p style="font-size: 12px; margin-bottom:10px; color:rgba(0,0,0,.8);line-height: 18px;">'.$_POST['message'].'</p>';
-				$config = Array(
-					'protocol' => 'smtp',
-					'smtp_host' => SMTP_HOSTNAME,
-					'smtp_port' => SMTP_PORT,
-					'smtp_user' => SENT_EMAIL_FROM,
-					'smtp_pass' => SENT_EMAIL_PASSWORD,
-					'mailtype'  => 'html', 
-					'newline'   => "\r\n",
-					'AuthType'   => "XOAUTH2",
-					'charset'   => 'iso-8859-1',
+				// $config = Array(
+				// 	'protocol' => 'smtp',
+				// 	'smtp_host' => SMTP_HOSTNAME,
+				// 	'smtp_port' => SMTP_PORT,
+				// 	'smtp_user' => SENT_EMAIL_FROM,
+				// 	'smtp_pass' => SENT_EMAIL_PASSWORD,
+				// 	'mailtype'  => 'html', 
+				// 	'newline'   => "\r\n",
+				// 	'AuthType'   => "XOAUTH2",
+				// 	'charset'   => 'iso-8859-1',
 					
-				);  
-				$this->load->library('email');
+				// );  
+				// $this->load->library('email');
 				//send refrence code 
 				$settingarr = $this->common_model->get_setting('1');
 				$subject = 'Reply From RBoard - '.$_POST['pursosefor'];
-				$this->email->initialize($config);
-				$this->email->set_newline("\r\n");
-				$this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
-				$this->email->to($this->session->userdata('email'));
-				$this->email->subject($subject);
+				// $this->email->initialize($config);
+				// $this->email->set_newline("\r\n");
+				// $this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
+				// $this->email->to($this->session->userdata('email'));
+				// $this->email->subject($subject);
 				$emailbody1 = array();
 				$emailbody1['name'] = $this->session->userdata('name');
 				$emailbody1['thanksname'] 	= $settingarr->signature_name;
@@ -1515,8 +1541,11 @@ class Applicant extends MX_Controller {
 				$emailbody1['body_msg'] = $bodycontentforCode;
 				$emailmessage = $this->load->view('emailer', $emailbody1,  TRUE);			
 				//$this->email->message('Testing the email class.');
-				$this->email->message($emailmessage);
-				$sent = $this->email->send();
+				// $this->email->message($emailmessage);
+				// $sent = $this->email->send();
+
+				$this->load->helper('mail');
+				$sent = send_mail($this->session->userdata('email'), $subject,$emailmessage, $settingarr);
 				if($sent){
 					echo 'Message sent successfully.';		
 				}else{
@@ -1734,26 +1763,26 @@ class Applicant extends MX_Controller {
 		$userdetails = $this->applicant->fetch_user_details($getuserid->user_id);
 		$serachlink = '<a href="'.base_url('license/search').'">Click here</a>';
 		$bodycontentforCode = '<p style="font-size: 12px; margin-bottom:10px; color:rgba(0,0,0,.8);line-height: 18px;">Greetings!<br><br>Your Request for Verification of Registration has been Done.<br><br>Please '.$serachlink.' to check the status of your application <br>and use this Refrence Code : <strong>'.$proRefCode.'</strong><br><br>Should you have questions just message us and we would be happy to assist you.</p>';
-		$config = Array(
-			'protocol' => 'smtp',
-			'smtp_host' => SMTP_HOSTNAME,
-			'smtp_port' => SMTP_PORT,
-			'smtp_user' => SENT_EMAIL_FROM,
-			'smtp_pass' => SENT_EMAIL_PASSWORD,
-			'mailtype'  => 'html', 
-			'newline'   => "\r\n",
-			'AuthType'   => "XOAUTH2",
-			'charset'   => 'iso-8859-1',
-		);  
-			$this->load->library('email');
+		// $config = Array(
+		// 	'protocol' => 'smtp',
+		// 	'smtp_host' => SMTP_HOSTNAME,
+		// 	'smtp_port' => SMTP_PORT,
+		// 	'smtp_user' => SENT_EMAIL_FROM,
+		// 	'smtp_pass' => SENT_EMAIL_PASSWORD,
+		// 	'mailtype'  => 'html', 
+		// 	'newline'   => "\r\n",
+		// 	'AuthType'   => "XOAUTH2",
+		// 	'charset'   => 'iso-8859-1',
+		// );  
+		// 	$this->load->library('email');
 			if($userdetails){
 				//send refrence code 
 				$settingarr = $this->common_model->get_setting('1');
-				$this->email->initialize($config);
-				$this->email->set_newline("\r\n");
-				$this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
-				$this->email->to($userdetails->email);
-				$this->email->subject('Application Submitted Successfully');
+				// $this->email->initialize($config);
+				// $this->email->set_newline("\r\n");
+				// $this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
+				// $this->email->to($userdetails->email);
+				// $this->email->subject('Application Submitted Successfully');
 				$emailbody = array();
 				$emailbody['name'] 			= $userdetails->fname.' '.$userdetails->lname.' '.$userdetails->name;
 				$emailbody['thanksname'] 	= $settingarr->signature_name;
@@ -1762,16 +1791,18 @@ class Applicant extends MX_Controller {
 				$emailbody['body_msg'] 		= $bodycontentforCode;
 				$emailmessage = $this->load->view('emailer', $emailbody,  TRUE);
 				//$this->email->message('Testing the email class.');
-				$this->email->message($emailmessage);
-				$this->email->send();
+				// $this->email->message($emailmessage);
+				// $this->email->send();
+				$this->load->helper('mail');
+				$sent = send_mail($userdetails->email, 'Application Submitted Successfully',$emailmessage, $settingarr);
 				//end send refrence code 
 
 				//2nd email for payment receipt
-				$this->email->initialize($config);
-				$this->email->set_newline("\r\n");
-				$this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
-				$this->email->to($userdetails->email);
-				$this->email->subject('Payment Receipt');
+				// $this->email->initialize($config);
+				// $this->email->set_newline("\r\n");
+				// $this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
+				// $this->email->to($userdetails->email);
+				// $this->email->subject('Payment Receipt');
 				$emailbody = array();
 				$emailbody['name'] 			= $userdetails->fname.' '.$userdetails->lname.' '.$userdetails->name;
 				$emailbody['thanksname'] 	= $settingarr->signature_name;
@@ -1780,8 +1811,11 @@ class Applicant extends MX_Controller {
 				$emailbody['body_msg'] 		= $bodycontentforCodeemail;
 				$emailmessage = $this->load->view('emailer_receipt', $emailbody,  TRUE);
 				//$this->email->message('Testing the email class.');
-				$this->email->message($emailmessage);
-				$this->email->send(); 
+				// $this->email->message($emailmessage);
+				// $this->email->send(); 
+
+				$this->load->helper('mail');
+				$sent = send_mail($userdetails->email, 'emailer_receipt',$emailmessage, $settingarr);
 
 				$updatenotification 				= array();
 				$updatenotification['ri_id'] 		= $userdetails->user_ID;
@@ -1971,26 +2005,26 @@ class Applicant extends MX_Controller {
 		$userdetails = $this->applicant->fetch_user_details($getuserid->user_id);
 		$serachlink = '<a href="'.base_url('license/search').'">Click here</a>';
 		$bodycontentforCode = '<p style="font-size: 12px; margin-bottom:10px; color:rgba(0,0,0,.8);line-height: 18px;">Greetings!<br><br>Your Request for Certificate of Good Standing has been Done.<br><br>Please '.$serachlink.' to check the status of your application <br>and use this Refrence Code : <strong>'.$proRefCode.'</strong><br><br>Should you have questions just message us and we would be happy to assist you.</p>';
-		$config = Array(
-			'protocol' => 'smtp',
-			'smtp_host' => SMTP_HOSTNAME,
-			'smtp_port' => SMTP_PORT,
-			'smtp_user' => SENT_EMAIL_FROM,
-			'smtp_pass' => SENT_EMAIL_PASSWORD,
-			'mailtype'  => 'html', 
-			'newline'   => "\r\n",
-			'AuthType'   => "XOAUTH2",
-			'charset'   => 'iso-8859-1',
-		);  
-			$this->load->library('email');
+		// $config = Array(
+		// 	'protocol' => 'smtp',
+		// 	'smtp_host' => SMTP_HOSTNAME,
+		// 	'smtp_port' => SMTP_PORT,
+		// 	'smtp_user' => SENT_EMAIL_FROM,
+		// 	'smtp_pass' => SENT_EMAIL_PASSWORD,
+		// 	'mailtype'  => 'html', 
+		// 	'newline'   => "\r\n",
+		// 	'AuthType'   => "XOAUTH2",
+		// 	'charset'   => 'iso-8859-1',
+		// );  
+		// 	$this->load->library('email');
 			if($userdetails){
 				//send refrence code 
 				$settingarr = $this->common_model->get_setting('1');
-				$this->email->initialize($config);
-				$this->email->set_newline("\r\n");
-				$this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
-				$this->email->to($userdetails->email);
-				$this->email->subject('Application Submitted Successfully');
+				// $this->email->initialize($config);
+				// $this->email->set_newline("\r\n");
+				// $this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
+				// $this->email->to($userdetails->email);
+				// $this->email->subject('Application Submitted Successfully');
 				$emailbody = array();
 				$emailbody['name'] 			= $userdetails->fname.' '.$userdetails->lname.' '.$userdetails->name;
 				$emailbody['thanksname'] 	= $settingarr->signature_name;
@@ -1999,16 +2033,19 @@ class Applicant extends MX_Controller {
 				$emailbody['body_msg'] 		= $bodycontentforCode;
 				$emailmessage = $this->load->view('emailer', $emailbody,  TRUE);
 				//$this->email->message('Testing the email class.');
-				$this->email->message($emailmessage);
-				$this->email->send();
+				// $this->email->message($emailmessage);
+				// $this->email->send();
+
+				$this->load->helper('mail');
+			$email_status = send_mail($userdetails->email, 'Application Submitted Successfully',$emailmessage, $settingarr);
 				//end send refrence code 
 
 				//2nd email for payment receipt
-				$this->email->initialize($config);
-				$this->email->set_newline("\r\n");
-				$this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
-				$this->email->to($userdetails->email);
-				$this->email->subject('Payment Receipt');
+				// $this->email->initialize($config);
+				// $this->email->set_newline("\r\n");
+				// $this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
+				// $this->email->to($userdetails->email);
+				// $this->email->subject('Payment Receipt');
 				$emailbody = array();
 				$emailbody['name'] 			= $userdetails->fname.' '.$userdetails->lname.' '.$userdetails->name;
 				$emailbody['thanksname'] 	= $settingarr->signature_name;
@@ -2017,8 +2054,11 @@ class Applicant extends MX_Controller {
 				$emailbody['body_msg'] 		= $bodycontentforCodeemail;
 				$emailmessage = $this->load->view('emailer_receipt', $emailbody,  TRUE);
 				//$this->email->message('Testing the email class.');
-				$this->email->message($emailmessage);
-				$this->email->send(); 
+				// $this->email->message($emailmessage);
+				// $this->email->send(); 
+
+				$this->load->helper('mail');
+			$email_status = send_mail($userdetails->email, 'Payment Receipt',$emailmessage, $settingarr);
 
 				$updatenotification 				= array();
 				$updatenotification['gs_id'] 		= $userdetails->user_ID;

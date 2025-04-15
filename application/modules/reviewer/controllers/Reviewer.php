@@ -553,6 +553,8 @@ class Reviewer extends MX_Controller {
 						if(isset($accreditation_number) && file_exists('assets/uploads/pdf/'.$accreditation_number.'.pdf')){
 						$this->email->attach(base_url('assets/uploads/pdf/'.$accreditation_number.'.pdf'));
 						}
+						$this->load->helper('mail');
+						$email_status = send_mail($unvdetls->email, 'School accreditation reviewed',$emailmessage, $bodycontentforCode);
 						// $this->email->send();
 						//insert in notification
 						$updatenotification 				= array();
@@ -693,6 +695,8 @@ class Reviewer extends MX_Controller {
 		$this->load->view('reviewer/common/footer');
 	}
 	public function graduatedetailsforpopup(){
+		$this->load->helper('mail');
+
 		if($this->session->userdata('login')['user_ID'] < 1 && $this->session->userdata('login')['role'] != 'sub-admin'){
 			redirect('login', true);
 		} 
@@ -818,26 +822,26 @@ class Reviewer extends MX_Controller {
 						<p style="font-size: 12px; margin-bottom:10px; color:rgba(0,0,0,.8);line-height: 18px;"><a href="'.base_url('graduates').'">'.base_url('graduates').'</a></p>
 						<p style="font-size: 12px; margin-bottom:10px; color:rgba(0,0,0,.8);line-height: 18px;">Should you have question please message us with this link: <br><a href="'.base_url('contactus').'">'.base_url('contactus').'</a></p>';
 						
-						$config = Array(
-							'protocol' => 'smtp',
-							'smtp_host' => SMTP_HOSTNAME,
-							'smtp_port' => SMTP_PORT,
-							'smtp_user' => SENT_EMAIL_FROM,
-							'smtp_pass' => SENT_EMAIL_PASSWORD,
-							'mailtype'  => 'html', 
-							'newline'   => "\r\n",
-							'AuthType'   => "XOAUTH2",
-							'charset'   => 'iso-8859-1',
+						// $config = Array(
+						// 	'protocol' => 'smtp',
+						// 	'smtp_host' => SMTP_HOSTNAME,
+						// 	'smtp_port' => SMTP_PORT,
+						// 	'smtp_user' => SENT_EMAIL_FROM,
+						// 	'smtp_pass' => SENT_EMAIL_PASSWORD,
+						// 	'mailtype'  => 'html', 
+						// 	'newline'   => "\r\n",
+						// 	'AuthType'   => "XOAUTH2",
+						// 	'charset'   => 'iso-8859-1',
 							
-						);  
-						$subject = 'Graduate Reviewed';
-						$this->load->library('email');
-						$this->email->initialize($config);
-						$this->email->set_newline("\r\n");
-						$this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
-						$this->email->to($graduatedetls->email);
-						//$this->email->to('abhijeetkuma@gmail.com'); 
-						$this->email->subject($subject);
+						// );  
+						// $subject = 'Graduate Reviewed';
+						// $this->load->library('email');
+						// $this->email->initialize($config);
+						// $this->email->set_newline("\r\n");
+						// $this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
+						// $this->email->to($graduatedetls->email);
+						// //$this->email->to('abhijeetkuma@gmail.com'); 
+						// $this->email->subject($subject);
 						$emailbody 					= array();
 						$emailbody['name'] 			= $graduatedetls->fullname;
 						$emailbody['thanksname'] 	= $settingarr->signature_name;
@@ -852,7 +856,9 @@ class Reviewer extends MX_Controller {
 						} */	
 						//$this->email->message('Testing the email class.');
 						// $this->email->message($emailmessage);
-						$this->email->send();
+						// $this->email->send();
+						$this->load->helper('mail');
+						$email_status = send_mail($graduatedetls->email, 'Graduate Reviewed',$emailmessage, $bodycontentforCode);
 						
 						//send school graducate mail 
 						$this->email->initialize($config);
@@ -869,13 +875,16 @@ class Reviewer extends MX_Controller {
 						$emailbody['body_msg'] 		= $bodycontentforCode;
 						$emailmessage = $this->load->view('emailer', $emailbody,  TRUE);		
 						//$this->email->message('Testing the email class.');
-						$this->email->message($emailmessage);
+						// $this->email->message($emailmessage);
 						/* if(isset($graduatedetls->examcode) && file_exists('assets/uploads/pdf/'.$graduatedetls->examcode.'.pdf')){
 						$this->email->attach(base_url('assets/uploads/pdf/'.$graduatedetls->examcode.'.pdf'));
 						} */	
 						//$this->email->message('Testing the email class.');
 						// $this->email->message($emailmessage);
-						$this->email->send();
+						// $this->email->send();
+						$this->load->helper('mail');
+						$email_status = send_mail($graduatedetls->email, 'School accreditation reviewed',$emailmessage, $bodycontentforCode);
+						
 						//end send school graducate mail 
 						$updatenotification 				= array();
 						$updatenotification['uniid'] 		= $graduatedetls->uniid;
@@ -896,7 +905,7 @@ class Reviewer extends MX_Controller {
 			}
 		}
 		$this->data = array(
-			'title' => 'Govt : Online Applications',
+			'title' => 'PCMS : Online Applications',
 			'page_title' => 'Online Applications',
 			'table_name' => 'Online Applications'
 		);
@@ -1156,7 +1165,10 @@ class Reviewer extends MX_Controller {
 						if(isset($registration_no) && file_exists('assets/uploads/pdf/'.$registration_no.'.pdf')){
 							$this->email->attach(base_url('assets/uploads/pdf/'.$registration_no.'.pdf'));
 						}
-						$this->email->send();
+						// $this->email->send();
+						$this->load->helper('mail');
+						$email_status = send_mail($professdatails->email, 'Professional details review',$emailmessage, $bodycontentforCode);
+						
 						//end mail function 
 					
 					// redirect('reviewer/reviewer/onlineApplication_listing', true);
@@ -1273,8 +1285,11 @@ class Reviewer extends MX_Controller {
 						$emailbody['body_msg'] 		= $bodycontentforCode;
 						$emailmessage = $this->load->view('emailer', $emailbody,  TRUE);	
 						$this->email->message($emailmessage);
-						$this->email->send();
+						// $this->email->send();
 					///end mail function 
+					$this->load->helper('mail');
+					$email_status = send_mail($professdatails->email, 'Professional details review',$emailmessage, $bodycontentforCode);
+						
 					
 					redirect('reviewer/reviewer/professionallicense', true);
 					//redirect('reviewer/reviewer/reviewed_listing', true);
@@ -1468,7 +1483,10 @@ class Reviewer extends MX_Controller {
 						if(isset($docdatails->refrence_code) && file_exists('assets/uploads/pdf/'.$docdatails->refrence_code.'card.pdf')){
 							$this->email->attach(base_url('assets/uploads/pdf/'.$docdatails->refrence_code.'card.pdf'));
 						}
-						$this->email->send();
+						// $this->email->send();
+						$this->load->helper('mail');
+						$email_status = send_mail($professdatails->email, 'Certificate Verification Done',$emailmessage, $bodycontentforCode);
+						
 					///end mail function 
 					
 					redirect('reviewer/reviewer/reviewed_listing', true);
@@ -1733,7 +1751,10 @@ class Reviewer extends MX_Controller {
 					if(isset($refrence_no) && file_exists('assets/uploads/pdf/'.$refrence_no.'.pdf')){
 						$this->email->attach(base_url('assets/uploads/pdf/'.$refrence_no.'.pdf'));
 						}
-					$this->email->send();
+					// $this->email->send();
+					$this->load->helper('mail');
+					$email_status = send_mail($cep_details->email, 'CEP PROVIDER',$emailmessage, $bodycontentforCode);
+					
 						$updatenotification 				= array();
 						$updatenotification['uniid'] 		= $cep_details->provider_id;
 						$updatenotification['subject'] 		= 'CEP accreditation reviewed';
@@ -1886,7 +1907,10 @@ class Reviewer extends MX_Controller {
 						if(isset($accreditation_no) && file_exists('assets/uploads/pdf/'.$accreditation_no.'.pdf')){
 							$this->email->attach(base_url('assets/uploads/pdf/'.$accreditation_no.'.pdf'));
 							}
-						$this->email->send();
+						// $this->email->send();
+						$this->load->helper('mail');
+					$email_status = send_mail($cepemail, 'Online course review',$emailmessage, $bodycontentforCode);
+					
 						///end mail function 
 						
 						$updatenotification 				= array();
@@ -2061,7 +2085,10 @@ class Reviewer extends MX_Controller {
 						if(isset($accreditation_no) && file_exists('assets/uploads/pdf/'.$accreditation_no.'.pdf')){
 							$this->email->attach(base_url('assets/uploads/pdf/'.$accreditation_no.'.pdf'));
 							}
-						$this->email->send();
+						// $this->email->send();
+						$this->load->helper('mail');
+						$email_status = send_mail($cepemail, 'Training course review',$emailmessage, $bodycontentforCode);
+						
 						$updatenotification 				= array();
 						$updatenotification['uniid'] 		= $trainingdetails->provider_id;
 						$updatenotification['subject'] 		= 'Training Course Review';
@@ -2224,7 +2251,10 @@ class Reviewer extends MX_Controller {
 						$emailmessage = $this->load->view('emailer', $emailbody,  TRUE);		
 						//$this->email->message('Testing the email class.');
 						$this->email->message($emailmessage);
-						$this->email->send();
+						// $this->email->send();
+						$this->load->helper('mail');
+						$email_status = send_mail($profemail, 'Request for Verification of Registration Review',$emailmessage, $bodycontentforCode);
+						
 						/*if(isset($accreditation_no) && file_exists('assets/uploads/pdf/'.$accreditation_no.'.pdf')){
 							$this->email->attach(base_url('assets/uploads/pdf/'.$accreditation_no.'.pdf'));
 							}
@@ -2507,7 +2537,10 @@ class Reviewer extends MX_Controller {
 						if(isset($ref_code) && file_exists('assets/uploads/pdf/'.$ref_code.'.pdf')){
 							$this->email->attach(base_url('assets/uploads/pdf/'.$ref_code.'.pdf'));
 							}
-						$this->email->send();
+						// $this->email->send();
+						$this->load->helper('mail');
+						$email_status = send_mail($profemail, 'Request for Certificate of Good Standing Review',$emailmessage, $bodycontentforCode);
+						
 						$updatenotification 				= array();
 						$updatenotification['gs_id'] 		= $pro_gsdetails->gs_id;
 						$updatenotification['subject'] 		= 'Request for Certificate of Good Standing Review';
@@ -2678,7 +2711,10 @@ class Reviewer extends MX_Controller {
 		$emailbody['body_msg'] 		= $bodycontentforCode;
 		$emailmessage = $this->load->view('emailer', $emailbody,  TRUE);	
 		$this->email->message($emailmessage);
-		$this->email->send();
+		// $this->email->send();
+		$this->load->helper('mail');
+		$email_status = send_mail($this->input->post('cep_email'), 'Course Feedback',$emailmessage, $bodycontentforCode);
+		
 		//insert in notification
 		$updatenotification 				= array();
 		$updatenotification['uniid'] 		= $cepid;
@@ -2738,7 +2774,10 @@ class Reviewer extends MX_Controller {
 		$emailbody['body_msg'] 		= $bodycontentforCode;
 		$emailmessage = $this->load->view('emailer', $emailbody,  TRUE);	
 		$this->email->message($emailmessage);
-		$this->email->send();
+		// $this->email->send();
+		$this->load->helper('mail');
+		$email_status = send_mail($this->input->post('cep_email'), 'Training Feedback:'.$this->input->post('training_title'),$emailmessage, $bodycontentforCode);
+		
 		//insert in notification
 		$updatenotification 				= array();
 		$updatenotification['uniid'] 		= $cepid;
@@ -2750,7 +2789,40 @@ class Reviewer extends MX_Controller {
 		$this->common_model->insertnotifications('tbl_provider_notifications',$updatenotification);
 	
 		redirect(base_url('reviewer/reviewer/reviewer_trainingdoc/'.$cepid.'/'.$trainingid), 'refresh');	
-	}				
+	}	
+	
+	public function test(){
+		$html_message = '
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+                .container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+                .header { font-size: 24px; font-weight: bold; margin-bottom: 10px; color: #333; }
+                .content { font-size: 16px; color: #555; }
+                .footer { margin-top: 20px; font-size: 14px; color: #999; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">Test Email</div>
+                <div class="content">
+                    <p>This is a test email sent from the <strong>send_mail</strong> helper in CodeIgniter.</p>
+                    <p><strong>Message:</strong></p>
+                    <p>test mail</p>
+                </div>
+                <div class="footer">Best regards,<br>RTMS Mailer</div>
+            </div>
+        </body>';
+
+		$this->load->helper('mail');
+		$email_status = send_mail('tester4545@yopmail.com', 'Exam booked successfully.',$html_message, ['1','2']);
+		if($email_status){
+			echo"send success";
+		}else{
+			echo"send faild";
+		}
+	}
 }
 
 ?>
