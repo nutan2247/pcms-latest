@@ -94,7 +94,7 @@
 
 							//echo '<pre>'; print_r($traininglisting); exit;
 
-							if(count($traininglisting)>0){
+							if(is_array($traininglisting)?count($traininglisting):0){
 
 							foreach($traininglisting as $cour){
 

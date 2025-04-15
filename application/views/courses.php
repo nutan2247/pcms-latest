@@ -46,7 +46,7 @@
                     <?php 
 		
 							//echo '<pre>'; print_r($courselisting); exit;
-							if(count($courselisting)>0){
+							if(is_array($courselisting)?count($courselisting):0){
 							foreach($courselisting as $cour){
 									$banner = '';
 								if(file_exists('./assets/images/ce_provider/'.$cour->course_image)){

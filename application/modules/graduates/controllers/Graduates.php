@@ -18,9 +18,8 @@ class Graduates extends MX_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
-	var $data = array();
-	//var $tbl_user_certificate  = 'tbl_user_certificate';
-
+	protected $subs_status;
+	protected $data;
 	public function __construct(){
 		parent::__construct();
 		//$this->load->model('Landing_model','landing');
@@ -31,21 +30,21 @@ class Graduates extends MX_Controller {
 		$this->load->library('ciqrcode');
 		
 		$subscription = $this->common_model->get_admin_subscription_details();
-		if(isset($subscription->rb_sub_key) && $subscription->rb_sub_key == ""){
-			//go to contcat for admin with form details
-			$this->session->set_flashdata('item', array('message' => 'Please Contact to Administrator.','class' => 'alert-warning'));
-			redirect(base_url('contactus'), 'refresh');		
-		}
-
-		if($subscription->no_of_application == 0 && $subscription->subscription_id == 6){
-			$this->subs_status = 'y';
-		}else{
-			if($subscription->total_application <= $this->common_model->get_online_application_count()){	
-				$this->subs_status = 'n';
-			}else{
-				$this->subs_status = 'y';
-			}
-		}
+		// if(isset($subscription->rb_sub_key) && $subscription->rb_sub_key == ""){
+		// 	//go to contcat for admin with form details
+		// 	$this->session->set_flashdata('item', array('message' => 'Please Contact to Administrator.','class' => 'alert-warning'));
+		// 	redirect(base_url('contactus'), 'refresh');		
+		// }
+		$this->subs_status = 'y';
+		// if($subscription->no_of_application == 0 && $subscription->subscription_id == 6){
+		// 	$this->subs_status = 'y';
+		// }else{
+		// 	if($subscription->total_application <= $this->common_model->get_online_application_count()){	
+		// 		$this->subs_status = 'n';
+		// 	}else{
+		// 		$this->subs_status = 'y';
+		// 	}
+		// }
 	}
 	public function index(){
 		//echo 'sdf'; exit;

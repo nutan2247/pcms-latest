@@ -1,7 +1,8 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Ce_provider extends MX_Controller {
-	
+	protected $subs_status;
+	protected $data;
 	public function __construct(){
 		parent::__construct();
 		$this->load->model('Provider_model','provider');
@@ -10,21 +11,21 @@ class Ce_provider extends MX_Controller {
 		
 		//rboard check 
 		$subscription = $this->common_model->get_admin_subscription_details();
-		if($subscription->rb_sub_key == ""){
-			//go to contcat for admin with form details
-			$this->session->set_flashdata('item', array('message' => 'Please Contact to Administrator.','class' => 'alert-warning'));
-			redirect(base_url('contactus'), 'refresh');		
-		}
+		// if($subscription->rb_sub_key == ""){
+		// 	//go to contcat for admin with form details
+		// 	$this->session->set_flashdata('item', array('message' => 'Please Contact to Administrator.','class' => 'alert-warning'));
+		// 	redirect(base_url('contactus'), 'refresh');		
+		// }
 
-		if($subscription->no_of_application == 0 && $subscription->subscription_id == 6){
+		// if($subscription->no_of_application == 0 && $subscription->subscription_id == 6){
 			$this->subs_status = 'y';
-		}else{
-			if($subscription->total_application <= $this->common_model->get_online_application_count()){	
-				$this->subs_status = 'n';
-			}else{
-				$this->subs_status = 'y';
-			}
-		}
+		// }else{
+		// 	if($subscription->total_application <= $this->common_model->get_online_application_count()){	
+		// 		$this->subs_status = 'n';
+		// 	}else{
+		// 		$this->subs_status = 'y';
+		// 	}
+		// }
 		//end rboard check 
 	}
 
@@ -34,7 +35,8 @@ class Ce_provider extends MX_Controller {
 		}
 		redirect(base_url('ce-provider/ce_provider/onlinecourse'), 'refresh');
 		
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		$uemail = $this->session->userdata('logincepacc')['username'];
 		$this->data = array('title'=> 'Dashboard');
 		$this->data['user_details'] = $this->provider->get_row_object('tbl_ce_provider','provider_id',$uid);
@@ -51,7 +53,8 @@ class Ce_provider extends MX_Controller {
 		if(!$this->session->userdata('logincepacc')['user_ID']){
 			redirect(base_url('login'), 'refresh');
 		}
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		$this->data = array('title'=> 'Course Application');
 		$this->data['countries'] = $this->Master_m->get_countries();
 		$this->data['details'] = $this->provider->get_row_object('tbl_ce_provider','provider_id',$uid);
@@ -74,7 +77,8 @@ class Ce_provider extends MX_Controller {
 		if(!$this->session->userdata('logincepacc')['user_ID']){
 			redirect(base_url('login'), 'refresh');
 		}
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		$this->data = array('title'=> 'Course Application');
 		$this->data['countries'] = $this->Master_m->get_countries();
 		$this->data['details'] = $this->provider->get_row_object('tbl_ce_provider','provider_id',$uid);
@@ -98,7 +102,8 @@ class Ce_provider extends MX_Controller {
 		if(!$this->session->userdata('logincepacc')['user_ID']){
 			redirect(base_url('login'), 'refresh');
 		}
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		$this->data = array('title'=> 'Course Application');
 		$this->data['countries'] = $this->Master_m->get_countries();
 		$this->data['details'] = $this->provider->get_row_object('tbl_ce_provider','provider_id',$uid);
@@ -121,7 +126,8 @@ class Ce_provider extends MX_Controller {
 		if(!$this->session->userdata('logincepacc')['user_ID']){
 			redirect(base_url('login'), 'refresh');
 		}
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		$this->data = array('title'=> 'Course Application');
 		$this->data['countries'] = $this->Master_m->get_countries(); 
 		$this->data['details'] = $this->provider->get_row_object('tbl_ce_provider','provider_id',$uid);
@@ -143,7 +149,8 @@ class Ce_provider extends MX_Controller {
 	}
 
 	public function delete_course($id){
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		$result = $this->provider->deleteCourse($id,$uid);
 
 		if($result){
@@ -156,7 +163,8 @@ class Ce_provider extends MX_Controller {
 	}
 
 	public function delete_training($id){
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		$result = $this->provider->deletetraining($id,$uid);
 
 		if($result){
@@ -172,7 +180,8 @@ class Ce_provider extends MX_Controller {
 		if(!$this->session->userdata('logincepacc')['user_ID']){
 			redirect(base_url('login'), 'refresh');
 		}
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		$this->data = array('title'=> 'Renewal History');
 		$this->data['countries'] = $this->Master_m->get_countries();
 		$this->data['details'] = $this->provider->get_row_object('tbl_ce_provider','provider_id',$uid);
@@ -193,7 +202,8 @@ class Ce_provider extends MX_Controller {
 		if(!$this->session->userdata('logincepacc')['user_ID']){
 			redirect(base_url('login'), 'refresh');
 		}
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		$this->data = array('title'=> 'Purchase List');
 		$this->data['countries'] = $this->Master_m->get_countries();
 		$this->data['details'] = $this->provider->get_row_object('tbl_ce_provider','provider_id',$uid);
@@ -214,7 +224,8 @@ class Ce_provider extends MX_Controller {
 		if(!$this->session->userdata('logincepacc')['user_ID']){
 			redirect(base_url('login'), 'refresh');
 		}
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		$this->data = array('title'=> 'Purchase List');
 		
 		if($this->input->post('submit')=='submit'){
@@ -302,7 +313,8 @@ class Ce_provider extends MX_Controller {
 		if(!$this->session->userdata('logincepacc')['user_ID']){
 			redirect(base_url('login'), 'refresh');
 		}
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		$this->data = array('title'=> 'Purchase List');
 		$this->data['countries'] = $this->Master_m->get_countries();
 		$this->data['details'] = $this->provider->get_row_object('tbl_ce_provider','provider_id',$uid);
@@ -321,7 +333,8 @@ class Ce_provider extends MX_Controller {
 		if(!$this->session->userdata('logincepacc')['user_ID']){
 			redirect(base_url('login'), 'refresh');
 		}
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		$this->data = array('title'=> 'Purchase List');
 		$this->data['countries'] = $this->Master_m->get_countries();
 		$this->data['details'] = $this->provider->get_row_object('tbl_ce_provider','provider_id',$uid);
@@ -340,7 +353,8 @@ class Ce_provider extends MX_Controller {
 		if(!$this->session->userdata('logincepacc')['user_ID']){
 			redirect(base_url('login'), 'refresh');
 		}
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		$this->data = array('title'=> 'Purchase List');
 		$this->data['countries'] = $this->Master_m->get_countries();
 		$this->data['details'] = $this->provider->get_row_object('tbl_ce_provider','provider_id',$uid);
@@ -360,7 +374,8 @@ class Ce_provider extends MX_Controller {
 		if(!$this->session->userdata('logincepacc')['user_ID']){
 			redirect(base_url('login'), 'refresh');
 		}
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		
 		if($this->input->post('submit')){
 			$this->form_validation->set_rules('old_password', 'Current Password', 'required');
@@ -930,10 +945,8 @@ class Ce_provider extends MX_Controller {
 		}	
 	}
 	public function course_application(){
-		// if(!$this->session->userdata('logincepacc')['user_ID']){
-		// 	redirect(base_url('login'), 'refresh');
-		// }
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+		$uid = $loginData['user_ID'] ?? null;
 		$this->data = array('title'=> 'CEP & Accreditation Verification');
 		$this->data['countries'] = $this->Master_m->get_countries();
 		//$this->data['details'] = $this->provider->get_row_object('tbl_ce_provider','provider_id',$uid);
@@ -1235,7 +1248,8 @@ class Ce_provider extends MX_Controller {
 		// if(!$this->session->userdata('logincepacc')['user_ID']){
 		// 	redirect(base_url('login'), 'refresh');
 		// }
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+		$uid = $loginData['user_ID'] ?? null;
 		$this->data = array('title'=> 'CEP & Accreditaion Verification');
 		$this->data['countdown'] 	= $this->provider->cep_doc_details($uid);
 		$this->data['countries'] = $this->Master_m->get_countries();
@@ -1251,7 +1265,8 @@ class Ce_provider extends MX_Controller {
 		if(!$this->session->userdata('logincepacc')['user_ID']){
 			redirect(base_url('login'), 'refresh');
 		}
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+		$uid = $loginData['user_ID'] ?? null;
 		$uemail = $this->session->userdata('logincepacc')['username']; 
 		$this->data = array('title'=> 'Training Course File');
 		$this->data['countries'] = $this->Master_m->get_countries();
@@ -1821,7 +1836,8 @@ class Ce_provider extends MX_Controller {
 		if(!$this->session->userdata('logincepacc')['user_ID']){
 			redirect(base_url('login'), 'refresh');
 		}
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		
 		$cepdoc_id = base64_decode($id); 
 		$this->data['unvdetls'] = $this->provider->cep_doc_details($uid,'r');
@@ -1902,7 +1918,8 @@ class Ce_provider extends MX_Controller {
 				$this->session->set_flashdata('response','<div class="alert alert-danger">Something went wrong!</div>');
 			}
 		}
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		$this->data = array('title'=> 'Edit Training Course');
 		$this->data['countdown'] 		= $this->provider->cep_doc_details_for_dashboard($uid);
 		$this->data['user_details'] 	= $this->provider->get_row_object('tbl_ce_provider','provider_id',$uid);
@@ -1926,7 +1943,8 @@ class Ce_provider extends MX_Controller {
 				$this->session->set_flashdata('response','<div class="alert alert-danger">Something went wrong!</div>');
 			}
 		}
-		$uid = $this->session->userdata('logincepacc')['user_ID'];
+		$loginData = $this->session->userdata('logincepacc');
+$uid = $loginData['user_ID'] ?? null;
 		$this->data = array('title'=> 'Edit Online Course');
 		$this->data['countdown'] 		= $this->provider->cep_doc_details_for_dashboard($uid);
 		$this->data['user_details'] 	= $this->provider->get_row_object('tbl_ce_provider','provider_id',$uid);
