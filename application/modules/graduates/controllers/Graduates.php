@@ -31,7 +31,7 @@ class Graduates extends MX_Controller {
 		$this->load->library('ciqrcode');
 		
 		$subscription = $this->common_model->get_admin_subscription_details();
-		if($subscription->rb_sub_key == ""){
+		if(isset($subscription->rb_sub_key) && $subscription->rb_sub_key == ""){
 			//go to contcat for admin with form details
 			$this->session->set_flashdata('item', array('message' => 'Please Contact to Administrator.','class' => 'alert-warning'));
 			redirect(base_url('contactus'), 'refresh');		
@@ -363,27 +363,27 @@ class Graduates extends MX_Controller {
 			
 			$search_link = '<a href="'.base_url('license/search').'">Click here</a>';
 			$bodycontentforCode = '<p style="font-size: 12px; margin-bottom:10px; color:rgba(0,0,0,.8);line-height: 18px;">Greetings!<br><br>Your Exam has been booked successfully.<br><br>In this regard, you can use your Refrence Code : '.$userdetails->refrence_code.' to learn the Guidline and get the EXAM PASS.<br>Please <b style="color: blue;">'.$search_link.'</b> to view and download your exam pass.<br><br>Should you have questions just message us and we would Be happy to assist you.</p>';
-			$config = Array(
-				'protocol' => 'smtp',
-				'smtp_host' => SMTP_HOSTNAME,
-				'smtp_port' => SMTP_PORT,
-				'smtp_user' => SENT_EMAIL_FROM,
-				'smtp_pass' => SENT_EMAIL_PASSWORD,
-				'mailtype'  => 'html', 
-				'newline'   => "\r\n",
-				'AuthType'   => "XOAUTH2",
-				'charset'   => 'iso-8859-1',
-			);  
+			// $config = Array(
+			// 	'protocol' => 'smtp',
+			// 	'smtp_host' => SMTP_HOSTNAME,
+			// 	'smtp_port' => SMTP_PORT,
+			// 	'smtp_user' => SENT_EMAIL_FROM,
+			// 	'smtp_pass' => SENT_EMAIL_PASSWORD,
+			// 	'mailtype'  => 'html', 
+			// 	'newline'   => "\r\n",
+			// 	'AuthType'   => "XOAUTH2",
+			// 	'charset'   => 'iso-8859-1',
+			// );  
 				
-			$this->load->library('email');
+			// $this->load->library('email');
 			if($userdetails){
 				$settingarr = $this->common_model->get_setting('1');
 				//send refrence code 
-				$this->email->initialize($config);
-				$this->email->set_newline("\r\n");
-				$this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
-				$this->email->to($userdetails->email);
-				$this->email->subject('Exam booked successfully.');
+				// $this->email->initialize($config);
+				// $this->email->set_newline("\r\n");
+				// $this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
+				// $this->email->to($userdetails->email);
+				// $this->email->subject('Exam booked successfully.');
 				$emailbody = array();
 				$emailbody['name'] 			= $userdetails->student_name.' '.$userdetails->middle_name.' '.$userdetails->surname;
 				$emailbody['thanksname'] 	= $settingarr->signature_name;
@@ -392,18 +392,21 @@ class Graduates extends MX_Controller {
 				$emailbody['body_msg'] 	= $bodycontentforCode;
 				$emailmessage = $this->load->view('emailer', $emailbody,  TRUE);
 				//$this->email->message('Testing the email class.');
-				$this->email->message($emailmessage);
-				if(isset($graducatedetailsarr->examcode) && file_exists('assets/uploads/pdf/'.$graducatedetailsarr->examcode.'.pdf')){
-					$this->email->attach(base_url('assets/uploads/pdf/'.$graducatedetailsarr->examcode.'.pdf'));
-					}
-				$this->email->send();
+				// $this->email->message($emailmessage);
+				// if(isset($graducatedetailsarr->examcode) && file_exists('assets/uploads/pdf/'.$graducatedetailsarr->examcode.'.pdf')){
+				// 	$this->email->attach(base_url('assets/uploads/pdf/'.$graducatedetailsarr->examcode.'.pdf'));
+				// 	}
+				// $this->email->send();
+
+				$this->load->helper('mail');
+				$email_status = send_mail($userdetails->email, 'Exam booked successfully.',$emailmessage, $emailbody);
 
 				//2nd email
-				$this->email->initialize($config);
-				$this->email->set_newline("\r\n");
-				$this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
-				$this->email->to($userdetails->email);
-				$this->email->subject('Payment_Receipt');
+				// $this->email->initialize($config);
+				// $this->email->set_newline("\r\n");
+				// $this->email->from(SENT_EMAIL_FROM, SENDER_NAME);
+				// $this->email->to($userdetails->email);
+				// $this->email->subject('Payment_Receipt');
 				$emailbody = array();
 				$emailbody['name'] 			= $userdetails->student_name.' '.$userdetails->middle_name.' '.$userdetails->surname;
 				$emailbody['thanksname'] 	= $settingarr->signature_name;
@@ -412,8 +415,11 @@ class Graduates extends MX_Controller {
 				$emailbody['body_msg'] 	= $bodycontentforCodeemail;
 				$emailmessage = $this->load->view('emailer_receipt', $emailbody,  TRUE);
 				//$this->email->message('Testing the email class.');
-				$this->email->message($emailmessage);
-				$this->email->send();
+				// $this->email->message($emailmessage);
+				// $this->email->send();
+
+				$this->load->helper('mail');
+				$email_status = send_mail($userdetails->email, 'Payment Receipt',$emailmessage, $emailbody);
 				//end send refrence code 
 			// }
 			}

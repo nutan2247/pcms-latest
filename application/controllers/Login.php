@@ -167,7 +167,11 @@ class Login extends MX_Controller {
 	}
 
 	private function _verifiy_password_hash($password, $hash){
-		return password_verify($password, $hash);
+		if ($hash && isset($hash) && is_string($hash)) {
+			return password_verify($password, $hash);
+			}else{
+				return false;
+			}
 	}
 
 	// public function check_session(){
