@@ -1,0 +1,98 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<style type="text/css">    
+    .error{
+        color:#ce2b2b;
+    }
+</style>
+<div id="banner-grid" class="py-5 px-2 bg-red mb-5">
+    <h2 class="text-center text-uppercase text-white"><?php echo $page_title; ?></h2>
+</div>
+<div class="container">
+    <div class="row pro-steps">
+        <div class="col-2">
+           <a href="#" class="stepProcess">
+                <span>1</span>
+                <label>Personal and Professional<br> Verification</label>
+            </a>         
+        </div>
+        <div class="col-2">
+            <a href="#">
+                <span>
+                    <strong>2</strong><i class="fa fa-check" aria-hidden="true"></i>
+                </span>
+                <label>Required CE Units Verification </label>
+            </a>
+        </div>
+        <div class="col-2">
+            <a href="#">
+				<span>3</span>
+				<label>CE Certificate Verification </label>
+			</a>
+        </div>
+        <div class="col-2">
+            <a href="#">
+                <span>4</span>
+                <label>Payment</label>
+            </a>
+        </div>
+        <div class="col-2">            
+            <a href="#">
+                <span>5</span>
+                <label>Digital Professional License</label>
+            </a>        
+        </div>
+    </div>
+
+    <div class="col-md-8 mx-auto">
+        <div class="my-5">
+            <h4 class="mb-4 mt-4 text-uppercase text-center"><?php echo $title; ?></h4>
+            <?php echo $this->session->flashdata('error'); ?>
+            <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Name</label>
+                <div class="col-sm-10">
+                    <?php echo $details->fname.' '.$details->lname.' '.$details->name; ?>
+                </div>
+            </div>
+			<div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Date of Birth</label>
+                <div class="col-sm-10">
+                    <?php echo date('F d,Y',strtotime($details->dob)); ?>
+                </div>
+            </div>
+			<div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Email</label>
+                <div class="col-sm-10">
+                    <?php echo $details->email; ?>
+                </div>
+            </div>
+			<div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Gender</label>
+                <div class="col-sm-10">
+                    <?php echo $details->gender; ?>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Profession</label>
+                <div class="col-sm-10">
+                    <?php echo $details->profession_name; ?>
+                </div>
+            </div>
+			<div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Registration Code</label>
+                <div class="col-sm-10">
+                    <?php echo $details->registration_no; ?>
+                </div>
+            </div>
+			
+            
+            <div class="form-group row">
+                <div class="col-sm-10 offset-sm-2">
+                    <a href="<?php echo base_url('professional/applicant/professional_ceunits');?>"><button type="button" class="btn btn-success text-uppercase" name="submit" value="submit" id="submitBtn">Next</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
